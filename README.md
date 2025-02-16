@@ -33,7 +33,7 @@ Benefits
 
 Requirements
 ------------
-
+* Linux distro with /bin/bash
 * OpenVPN installed on your system
 * One or more OpenVPN configuration files
 
