@@ -34,11 +34,11 @@ while [[ $folder_path = "" ]]; do
 	read -p "Select network protocol: " nwp
 	case $nwp in
 	[1]) folder_path=$TCP
-	echo -e " \n You chose $folder_path.";;
+	echo -e " \nYou chose $folder_path.";;
 	[2]) folder_path=$UDP
-	echo -e " \n You chose $folder_path.";;
+	echo -e " \nYou chose $folder_path.";;
 	[3-9,0])
-	echo -e " \n Invalid number. Please try again.";;
+	echo -e " \nInvalid number. Please try again.";;
 	esac
 done
 }
@@ -76,7 +76,7 @@ printNames
 VPNConfig=""
 # Use a dynamic case statement to assign the VPNConfig variable
 while [[ $VPNConfig = "" ]]; do
-  echo -e "Enter the line number (or 'q' to quit):"
+  echo -e "Enter the line number (or 'q' to quit): ${Y}"
   read -p "==>" line_number
 
   if [ "$line_number" = "q" ]; then
@@ -91,25 +91,32 @@ while [[ $VPNConfig = "" ]]; do
 
     while [[ $YN = "" ]]; do
 
-		echo "Do you want to use: $VPNConfig? Y/N"
+		echo -e "${LG}Do you want to use: $VPNConfig? Y/N ${Y}"
 		read -p "==> " yn
 		case $yn in
 		 [Y,y])
-
-			 echo -e "Starting OpenVPN with $VPNConfig... \n"
+			 echo -e "${LG}Starting OpenVPN with $VPNConfig... \n"
 			 YN=1
-			 read -p "Want to use Auth-User-Pass? Y/N " auth
+			 UseAuth=""
+			 while [[ $UseAuth = "" ]]; do
+			 echo -e "${LG}Want to use Auth-User-Pass? Y/N ${Y}"
+			 read -p "==>" auth
+
 				case $auth in
 				[Y,y])
-					sudo openvpn --config $VPNConfig --auth-user-pass pass.txt;;
+					sudo openvpn --config $VPNConfig --auth-user-pass pass.txt
+					$UseAuth=1
+					break;;
 				[N,n])
-					sudo openvpn --config $VPNConfig;;
+					sudo openvpn --config $VPNConfig
+					$UseAuth=1
+					break;;
 				*)
 					echo -e "Invalid option. Please try again.";;
-				esac;;
-
+				esac
+			 done;;
 		 [N,n])
-			 echo -e "Choose Another Config. \n"
+			 echo -e "${LG}Choose Another Config. \n"
 			 VPNConfig=""
 			 YN=1;;
 		esac
@@ -121,7 +128,7 @@ while [[ $VPNConfig = "" ]]; do
 		selectPath
 		printNames
     else
-		echo "Invalid line number. Please try again."
+		echo -e "${LG}Invalid line number. Please try again."
     fi
   fi
 done
