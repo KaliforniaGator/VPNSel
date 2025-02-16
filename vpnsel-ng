@@ -87,16 +87,24 @@ while [[ $VPNConfig = "" ]]; do
     VPNConfig="${file_paths[$((line_number-1))]}"
     YN=""
     while [[ $YN = "" ]]; do
-        echo "Do you want to use: $VPNConfig? Y/N"
-        read -p "==> " yn
-        case $yn in
-         [Y,y]) echo "Starting OpenVPN with $VPNConfig..."
-         YN=1
-         sudo openvpn --config $VPNConfig --auth-user-pass pass.txt;;
-         [N,n]) echo "Choose Another Config."
-         VPNConfig=""
-         YN=1;;
-        esac
+	echo "Do you want to use: $VPNConfig? Y/N"
+	read -p "==> " yn
+	case $yn in
+	 [Y,y]) echo -e "Starting OpenVPN with $VPNConfig... \n"
+	 YN=1
+	 read -p "Want to use Auth-User-Pass? Y/N" auth
+
+		case $auth in
+		[Y,n])
+		sudo openvpn --config $VPNConfig --auth-user-pass pass.txt;;
+		[N,n])
+		sudo openvpn --config $VPNConfig;;
+		esac;;
+
+	 [N,n]) echo "Choose Another Config."
+	 VPNConfig=""
+	 YN=1;;
+	esac
     done
   else
     if [ "$line_number" = "p" ]; then
