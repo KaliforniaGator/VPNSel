@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# Set the folder path
+TCP="TCP/"
+UDP="UDP/"
+folder_path=""
+
+#Term Colors
+G='\033[0;32m'
+LG='\033[1;32m'
+Y='\033[1;33m'
+
+#Clear the screen
+clear
+#Set cursor position
+tput cup 2 0
+
+#Print Logo
+echo -e "${Y}   ██╗   ██╗██████╗ ███╗   ██╗    ███████╗███████╗██╗           "
+echo -e "${Y}   ██║   ██║██╔══██╗████╗  ██║    ██╔════╝██╔════╝██║           "
+echo -e "${Y}   ██║   ██║██████╔╝██╔██╗ ██║    ███████╗█████╗  ██║           "
+echo -e "${Y}   ╚██╗ ██╔╝██╔═══╝ ██║╚██╗██║    ╚════██║██╔══╝  ██║           "
+echo -e "${Y}    ╚████╔╝ ██║     ██║ ╚████║    ███████║███████╗███████╗      "
+echo -e "${Y}     ╚═══╝  ╚═╝     ╚═╝  ╚═══╝    ╚══════╝╚══════╝╚══════╝ NG \n"
+echo -e "             ${G}PLEASE SELECT AN OPENVPN CONFIGURATION:${LG}     \n"
+
+echo -e "             +--------------------+                                 "
+echo -e "             |  1. TCP  | 2. UDP  |                                 "
+echo -e "             +--------------------+                               \n"
+
+selectPath() {
+#Select between TCP or UDP configurations
+while [[ $folder_path = "" ]]; do
+        read -p "     Select network protocol: " nwp
+        case $nwp in
+        [1]) folder_path=$TCP
+        echo -e " \n    You chose $folder_path.";;
+        [2]) folder_path=$UDP
+        echo -e " \n    You chose $folder_path.";;
+        [3-9,0])
+        echo -e " \n Invalid number. Please try again.";;
+        esac
+done
+}
+
+selectPath
+
+printNames(){
+# Read the file paths into an array
+mapfile -t file_paths < <(find "$folder_path" -type f)
+
+# Find the maximum file name length
+max_length=0
+for ((i=0; i<${#file_paths[@]}; i++)); do
+  file_name=$(basename "${file_paths[$i]}")
+  if [ ${#file_name} -gt $max_length ]; then
+    max_length=${#file_name}
+  fi
+done
+
+# Print the list of files inside an ASCII box
+box_width=$((max_length + 10))
+echo "            +----+$(printf "%*s" $box_width | tr ' ' '-')+"
+echo "            | #  |$(printf "%*s" $box_width | tr ' ' '-')|"
+echo "            +----+$(printf "%*s" $box_width | tr ' ' '-')+"
+for ((i=0; i<${#file_paths[@]}; i++)); do
+  file_name=$(basename "${file_paths[$i]}")
+  printf "            | %2d |%-${box_width}s|\n" $((i+1)) "$file_name"
+done
+echo "            +----+$(printf "%*s" $box_width | tr ' ' '-')+"
+
+echo "            (p to select a different protocol)                   "
+}
+
+printNames
+
+VPNConfig=""
+# Use a dynamic case statement to assign the VPNConfig variable
+while [[ $VPNConfig = "" ]]; do
+  read -p "Enter the line number (or 'q' to quit): " line_number
+  if [ "$line_number" = "q" ]; then
+    break
+  fi
+
+  # Check if the line number is valid
+  if (( line_number >= 1 && line_number <= ${#file_paths[@]} )); then
+    VPNConfig="${file_paths[$((line_number-1))]}"
+    YN=""
+    while [[ $YN = "" ]]; do
+        echo "Do you want to use: $VPNConfig? Y/N"
+        read -p "==> " yn
+        case $yn in
+         [Y,y]) echo "Starting OpenVPN with $VPNConfig..."
+         YN=1
+         sudo openvpn --config $VPNConfig --auth-user-pass pass.txt;;
+         [N,n]) echo "Choose Another Config."
+         VPNConfig=""
+         YN=1;;
+        esac
+    done
+  else
+    if [ "$line_number" = "p" ]; then
+        folder_path=""
+        selectPath
+        printNames
+    else
+    echo "Invalid line number. Please try again."
+    fi
+  fi
+done
