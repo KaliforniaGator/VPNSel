@@ -95,20 +95,19 @@ while [[ $VPNConfig = "" ]]; do
 		read -p "==> " yn
 		case $yn in
 		 [Y,y])
+
 			 echo -e "Starting OpenVPN with $VPNConfig... \n"
 			 YN=1
-			 AuthUse=""
-			 while [[ AuthUse = "" ]] do
-				 read -p "Want to use Auth-User-Pass? Y/N " auth
-					case $auth in
-					[Y,y])
+			 read -p "Want to use Auth-User-Pass? Y/N " auth
+				case $auth in
+				[Y,y])
 					sudo openvpn --config $VPNConfig --auth-user-pass pass.txt;;
-					$AuthUse=1
-					[N,n])
+				[N,n])
 					sudo openvpn --config $VPNConfig;;
-					$AuthUse=1
-					esac;;
-			done
+				*)
+					echo -e "Invalid option. Please try again.";;
+				esac;;
+
 		 [N,n])
 			 echo -e "Choose Another Config. \n"
 			 VPNConfig=""
