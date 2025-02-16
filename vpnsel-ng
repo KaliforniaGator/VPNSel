@@ -31,12 +31,13 @@ echo -e "             +--------------------+                            \n"
 selectPath() {
 #Select between TCP or UDP configurations
 while [[ $folder_path = "" ]]; do
-	read -p "Select network protocol: " nwp
+	echo -e "${LG}Select network protocol:${Y}"
+	read -p "==>" nwp
 	case $nwp in
 	[1]) folder_path=$TCP
-	echo -e " \nYou chose $folder_path.";;
+	echo -e "${LG} \nYou chose $folder_path.";;
 	[2]) folder_path=$UDP
-	echo -e " \nYou chose $folder_path.";;
+	echo -e "${LG} \nYou chose $folder_path.";;
 	[3-9,0])
 	echo -e " \nInvalid number. Please try again.";;
 	esac
@@ -105,11 +106,11 @@ while [[ $VPNConfig = "" ]]; do
 				case $auth in
 				[Y,y])
 					sudo openvpn --config $VPNConfig --auth-user-pass pass.txt
-					$UseAuth=1
+					#$UseAuth=1
 					break;;
 				[N,n])
 					sudo openvpn --config $VPNConfig
-					$UseAuth=1
+					#$UseAuth=1
 					break;;
 				*)
 					echo -e "Invalid option. Please try again.";;
