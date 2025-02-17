@@ -27,6 +27,17 @@ else
   echo "vpnsel-ng file already exists at $VPNSel_ng_FILE"
 fi
 
+# Download update.sh script from GitHub
+UPDATE_SH_FILE=$VPNSel_ng_DIR/update.sh
+
+if [ ! -f "$UPDATE_SH_FILE" ]; then
+  sudo wget -q -O "$UPDATE_SH_FILE" https://raw.githubusercontent.com/KaliforniaGator/VPNSel/b3ec2c926eb94794b566ede50299460fd2ec1084/update.sh
+  sudo chmod +x "$UPDATE_SH_FILE"
+  echo "update.sh script downloaded and made executable"
+else
+  echo "update.sh script already exists at $UPDATE_SH_FILE"
+fi
+
 # Create TCP and UDP folders
 TCP_FOLDER=$VPNSel_ng_DIR/TCP
 UDP_FOLDER=$VPNSel_ng_DIR/UDP
@@ -68,3 +79,4 @@ echo "Next steps:"
 echo "1. Place your OpenVPN configuration files (.ovpn) in the TCP folder at $TCP_FOLDER or the UDP folder at $UDP_FOLDER"
 echo "2. Edit the pass.txt file at $PASS_FILE with your username on the first line and password on the second line"
 echo "You can now use the vpnsel-ng command to select and connect to your OpenVPN configurations"
+echo "To update VPNSel-ng in the future, run the update.sh script from the VPNSel-ng directory."
