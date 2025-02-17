@@ -27,10 +27,10 @@ Installation
 ------------
 
 Using WGET:
-wget https://raw.githubusercontent.com/KaliforniaGator/VPNSel/c45cb0a9d8c35f5e0405299275ec8265844a74fb/install.sh
+wget https://raw.githubusercontent.com/KaliforniaGator/VPNSel/main/install.sh
 
 Using CURL:
-curl -O https://raw.githubusercontent.com/KaliforniaGator/VPNSel/c45cb0a9d8c35f5e0405299275ec8265844a74fb/install.sh
+curl -O https://raw.githubusercontent.com/KaliforniaGator/VPNSel/main/install.sh
 
 Using Git:
 git clone https://github.com/KaliforniaGator/VPNSel.git
