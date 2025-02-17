@@ -21,7 +21,7 @@ Usage
 1. Install VPNSel-ng on your system
 2. Add the OpenVPN configuration folders for TCP and UDP to the VPNSel directory
  (VPNSel will look inside the TCP and UDP directories by default)
-3. Launch VPNSel and select your desired configuration file
+3. Launch VPNSel and select your desired configuration file (use ./vpnsel-ng to start tool)
 
 Installation
 ------------
