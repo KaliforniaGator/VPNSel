@@ -20,7 +20,7 @@ fi
 VPNSel_ng_FILE=$VPNSel_ng_DIR/vpnsel-ng
 
 if [ ! -f "$VPNSel_ng_FILE" ]; then
-  sudo wget -q -O "$VPNSel_ng_FILE" https://raw.githubusercontent.com/KaliforniaGator/VPNSel/7474d0d043eea3d53f0abae42b4d8ca0a17676e7/vpnsel-ng
+  sudo wget -q -O "$VPNSel_ng_FILE" https://raw.githubusercontent.com/KaliforniaGator/VPNSel/main/vpnsel-ng
   sudo chmod +x "$VPNSel_ng_FILE"
   echo "vpnsel-ng file downloaded and made executable"
 else
@@ -31,7 +31,7 @@ fi
 UPDATE_SH_FILE=$VPNSel_ng_DIR/update.sh
 
 if [ ! -f "$UPDATE_SH_FILE" ]; then
-  sudo wget -q -O "$UPDATE_SH_FILE" https://raw.githubusercontent.com/KaliforniaGator/VPNSel/b3ec2c926eb94794b566ede50299460fd2ec1084/update.sh
+  sudo wget -q -O "$UPDATE_SH_FILE" https://raw.githubusercontent.com/KaliforniaGator/VPNSel/main/update.sh
   sudo chmod +x "$UPDATE_SH_FILE"
   echo "update.sh script downloaded and made executable"
 else
