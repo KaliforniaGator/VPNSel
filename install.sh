@@ -64,7 +64,10 @@ fi
 
 # Add VPNSel-ng directory to system PATH
 if [ -d "$VPNSel_ng_DIR" ]; then
-  sudo bash -c "echo 'export PATH=\"$PATH:$VPNSel_ng_DIR\"' >> /etc/profile"
+  sudo sed -i "s|export PATH=\"$.*$\"|export PATH=\"\1:$VPNSel_ng_DIR\"|" /etc/profile
+  if ! grep -q "$VPNSel_ng_DIR" /etc/profile; then
+    sudo echo "export PATH=\"$PATH:$VPNSel_ng_DIR\"" >> /etc/profile
+  fi
   echo "VPNSel-ng directory added to system PATH"
 else
   echo "VPNSel-ng directory not found"
