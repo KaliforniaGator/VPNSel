@@ -18,11 +18,30 @@ Features
 Usage
 -----
 
-1. Download and install VPNSel on your system
+1. Install VPNSel-ng on your system
 2. Add the OpenVPN configuration folders for TCP and UDP to the VPNSel directory
- (VPNSel will look inside the TCP directory by default)
+ (VPNSel will look inside the TCP and UDP directories by default)
 3. Launch VPNSel and select your desired configuration file
-4. Click "Connect" to establish a secure VPN connection
+
+Installation
+------------
+
+Using WGET:
+wget https://raw.githubusercontent.com/KaliforniaGator/VPNSel/c45cb0a9d8c35f5e0405299275ec8265844a74fb/install.sh
+
+Using CURL:
+curl -O https://raw.githubusercontent.com/KaliforniaGator/VPNSel/c45cb0a9d8c35f5e0405299275ec8265844a74fb/install.sh
+
+Using Git:
+git clone https://github.com/KaliforniaGator/VPNSel.git
+cd VPNSel
+git checkout c45cb0a9d8c35f5e0405299275ec8265844a74fb
+cp install.sh ~/  # or wherever they want to copy the file
+
+Updating
+--------
+
+To update the tool use the Update.sh script which will get the latest version of the tool and install it in your system.
 
 Benefits
 --------
@@ -34,13 +53,13 @@ Benefits
 Requirements
 ------------
 * Linux distro with /bin/bash
-* OpenVPN installed on your system
 * One or more OpenVPN configuration files
+* We Install OpenVPN for you if it is not currently installed in your system
 
 Getting Started
 ---------------
 
-To get started with VPNSel, simply download and install the tool, add your configuration files, and launch the application. For more detailed instructions and troubleshooting tips, please refer to the VPNSel documentation.
+To get started with VPNSel, simply use the install.sh, add your configuration files, and launch the application.
 
 Note
 ----
