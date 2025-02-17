@@ -62,24 +62,9 @@ else
   echo "pass.txt file already exists at $PASS_FILE"
 fi
 
-# Add VPNSel-ng directory to system PATH
-if [ -d "$VPNSel_ng_DIR" ]; then
-  sudo sed -i "s|export PATH=\"$.*$\"|export PATH=\"\1:$VPNSel_ng_DIR\"|" /etc/profile
-  if ! grep -q "$VPNSel_ng_DIR" /etc/profile; then
-    sudo echo "export PATH=\"$PATH:$VPNSel_ng_DIR\"" >> /etc/profile
-  fi
-  echo "VPNSel-ng directory added to system PATH"
-else
-  echo "VPNSel-ng directory not found"
-fi
-
-# Apply changes to system PATH
-source /etc/profile
-echo "System PATH updated. You can now use the vpnsel-ng command from anywhere."
-
 echo "Installation complete!"
 echo "Next steps:"
 echo "1. Place your OpenVPN configuration files (.ovpn) in the TCP folder at $TCP_FOLDER or the UDP folder at $UDP_FOLDER"
 echo "2. Edit the pass.txt file at $PASS_FILE with your username on the first line and password on the second line"
-echo "You can now use the vpnsel-ng command to select and connect to your OpenVPN configurations"
-echo "To update VPNSel-ng in the future, run the update.sh script from the VPNSel-ng directory."
+echo "3. Run the vpnsel-ng command from the VPNSel-ng directory to select and connect to your OpenVPN configurations"
+echo "4. Run the update.sh script from the VPNSel-ng directory to update VPNSel-ng in the future."
