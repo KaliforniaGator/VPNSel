@@ -1,5 +1,33 @@
 #!/bin/bash
 
+# Make sure OpenVPN is installed
+check-for-openvpn(){
+if ! command -v openvpn &> /dev/null; then
+  echo "OpenVPN is not installed. Do you want to install it? (yes/no)"
+  read -r response
+  if [ "$response" = "yes" ]; then
+    echo "Installing OpenVPN..."
+    if [ -x "$(command -v apt-get)" ]; then
+      sudo apt-get update
+      sudo apt-get install -y openvpn
+    elif [ -x "$(command -v yum)" ]; then
+      sudo yum install -y openvpn
+    elif [ -x "$(command -v pacman)" ]; then
+      sudo pacman -S --noconfirm openvpn
+    else
+      echo "Unsupported package manager"
+      exit 1
+    fi
+    echo "OpenVPN installation complete."
+  else
+    echo "OpenVPN is required for this script to function. Exiting."
+    exit 1
+  fi
+fi
+}
+
+check-for-openvpn
+
 # Set the folder path
 TCP="TCP/"
 UDP="UDP/"
