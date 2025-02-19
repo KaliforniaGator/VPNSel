@@ -75,7 +75,7 @@ selectPath
 
 printNames(){
 # Read the file paths into an array
-mapfile -t file_paths < <(find "$folder_path" -type f)
+mapfile -t file_paths < <(find "$folder_path" -type f -iname "*.ovpn")
 
 # Find the maximum file name length
 max_length=0
