@@ -67,20 +67,20 @@ print-header
 
 select-path() {
 #Select between TCP or UDP configurations
-echo -e "${LG}          +--------------------+                              "
-echo -e "${LG}          |  1. TCP  | 2. UDP  |                              "
-echo -e "${LG}          +--------------------+                            \n"
+echo -e "${LG}            +--------------------+                              "
+echo -e "${LG}            |  1. TCP  | 2. UDP  |                              "
+echo -e "${LG}            +--------------------+                            \n"
 
 while [[ $folder_path = "" ]]; do
-	echo -e "${LG}         Select network protocol:${Y}"
-	read -p "         ==>" nwp
+	echo -e "${LG}            Select network protocol:${Y}"
+	read -p "            ==>" nwp
 	case $nwp in
 	[1]) folder_path=$TCP
-	echo -e "${LG} \n         You chose $folder_path.";;
+	echo -e "${LG}\n            You chose $folder_path.";;
 	[2]) folder_path=$UDP
-	echo -e "${LG} \n         You chose $folder_path.";;
+	echo -e "${LG}\n            You chose $folder_path.";;
 	[3-9,0])
-	echo -e " \n         Invalid number. Please try again.";;
+	echo -e "\n            Invalid number. Please try again.";;
 	esac
 done
 }
@@ -116,14 +116,14 @@ printf "            | %2d |%-${box_width}s|\n" $((i+1)) "$file_name"
 done
 echo "            +----+$(printf "%*s" $box_width | tr ' ' '-')+"
 
-echo -e "\n         (p to select a different protocol)                   "
+echo -e "\n            (p to select a different protocol)                   "
 }
 
 #print-names
 
 exit-openvpn(){
 
-echo -e "\n${R}         Closing VPNSel-ng."
+echo -e "\n${R}            Closing VPNSel-ng."
 
 if pgrep -f openvpn > /dev/null; then
 # Close the app
@@ -137,7 +137,7 @@ fi
 
 restart-openvpn(){
 
-echo -e "\n${R}         Restarting VPNSel-ng."
+echo -e "\n${R}            Restarting VPNSel-ng."
 if pgrep -f openvpn > /dev/null; then
 # Close the app
 pkill openvpn
@@ -164,10 +164,10 @@ fi
 
 vpn-options(){
 print-header
-echo -e "\n         OpenVPN connection established. What would you like to do?"
-echo -e "         1. Restart OpenVPN"
-echo -e "         2. Close the app ${Y}"
-read -p "         Enter your choice: " choice
+echo -e "\n            OpenVPN connection established. What would you like to do?"
+echo -e "            1. Restart OpenVPN"
+echo -e "            2. Close the app ${Y}"
+read -p "            Enter your choice: " choice
 
 case $choice in
   1)
@@ -179,7 +179,7 @@ case $choice in
     exit-openvpn
     ;;
   *)
-    echo -e "\n${R}         Invalid choice. Closing the app."
+    echo -e "\n${R}            Invalid choice. Closing the app."
     exit-openvpn
     ;;
 esac
@@ -187,7 +187,7 @@ esac
 }
 
 start-vpn(){
-echo -e "\n         Starting VPN Connection..."
+echo -e "\n            Starting VPN Connection..."
 $vpn_command
 vpn-options
 }
@@ -196,9 +196,9 @@ select-vpn(){
 
 while [[ $selected_config = "" ]]; do
 
-echo -e "\n${LG}         Type p to change network protocol, type m to go back to the main menu."
-echo -e "\n${LG}         Choose which VPN configuration file to use (or type q to exit): ${Y}"
-read -p "         ==> " file_number
+echo -e "\n${LG}            Type p to change network protocol, type m to go back to the main menu."
+echo -e "\n${LG}            Choose which VPN configuration file to use (or type q to exit): ${Y}"
+read -p "            ==> " file_number
 
 #Exit tool
 if [[ $file_number = "q" ]]; then
@@ -222,7 +222,7 @@ fi
 
 if [[ $file_number = "" ]]; then
 
-echo -e "\n${R}         Invalid option. Please enter a number, p to change protocol, or q to quit. ${Y}"
+echo -e "\n${R}            Invalid option. Please enter a number, p to change protocol, or q to quit. ${Y}"
 
 else
 
@@ -230,8 +230,8 @@ if (( $file_number >= 1 && $file_number <= ${#file_paths[@]})); then
 
 temp_config="${file_paths[$((file_number-1))]}"
 
-echo -e "\n${LG}         Do you want to use $temp_config? (y/n) ${Y}"
-read -p "         Enter your choice: " use_config
+echo -e "\n${LG}            Do you want to use $temp_config? (y/n) ${Y}"
+read -p "            Enter your choice: " use_config
 
 if [[ $use_config = "y" ]]; then
 
@@ -267,20 +267,20 @@ done
 }
 
 select-auth(){
-echo -e "\n${LG}         Do you want to use --Auth-User-Pass (pass.txt) as your credentials? (y/n)${Y}"
-read -p "         Enter your choice: " use_auth
+echo -e "\n${LG}            Do you want to use --Auth-User-Pass (pass.txt) as your credentials? (y/n)${Y}"
+read -p "            Enter your choice: " use_auth
 
 if [[ $use_auth = "y" ]]; then
-echo -e "${LG}         Using Authentication."
+echo -e "${LG}            Using Authentication."
 vpn_command+=" --auth-user-pass pass.txt"
 
 elif [[ $use_auth = "n" ]]; then
 
-echo -e "${LG}         Not using Authentication."
+echo -e "${LG}            Not using Authentication."
 
 else
 
-echo -e "${R}         Invalid option. Please try again."
+echo -e "${R}            Invalid option. Please try again."
 select-auth
 fi
 }
@@ -330,7 +330,7 @@ read -p "            ==> " editor_chosen
 
 if [[ $editor_chosen = "" ]]; then
 print-header
-echo -e "\n${R}         Invalid option. Please enter a number. ${Y}"
+echo -e "\n${R}            Invalid option. Please enter a number. ${Y}"
 select-editor
 else
 if (( $editor_chosen >= 1 && $editor_chosen <= ${#available_editors[@]})); then
