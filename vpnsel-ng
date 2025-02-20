@@ -73,7 +73,7 @@ echo -e "${LG}            +--------------------+                            \n"
 
 while [[ $folder_path = "" ]]; do
 	echo -e "${LG}            Select network protocol:${Y}"
-	read -p "            ==>" nwp
+	read -p "            ==> " nwp
 	case $nwp in
 	[1]) folder_path=$TCP
 	echo -e "${LG}\n            You chose $folder_path.";;
