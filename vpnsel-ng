@@ -32,12 +32,19 @@ check-for-openvpn
 TCP="TCP/"
 UDP="UDP/"
 folder_path=""
+file_path=""
+selected_config=""
 
 #Term Colors
+R='\033[1;31m'
 G='\033[0;32m'
 LG='\033[1;32m'
 Y='\033[1;33m'
 
+#VPN Command
+vpn_command=""
+
+print-header(){
 #Clear the screen
 clear
 #Set cursor position
@@ -51,113 +58,223 @@ echo -e	"${Y}	╚██╗ ██╔╝██╔═══╝ ██║╚██�
 echo -e	"${Y}	 ╚████╔╝ ██║     ██║ ╚████║    ███████║███████╗███████╗   "
 echo -e	"${Y}	  ╚═══╝  ╚═╝     ╚═╝  ╚═══╝    ╚══════╝╚══════╝╚══════╝ \n"
 echo -e "             ${G}PLEASE SELECT AN OPENVPN CONFIGURATION:${LG}  \n"
+}
 
-echo -e "             +--------------------+                              "
-echo -e "             |  1. TCP  | 2. UDP  |                              "
-echo -e "             +--------------------+                            \n"
+print-header
 
-selectPath() {
+select-path() {
 #Select between TCP or UDP configurations
+echo -e "          +--------------------+                              "
+echo -e "          |  1. TCP  | 2. UDP  |                              "
+echo -e "          +--------------------+                            \n"
+
 while [[ $folder_path = "" ]]; do
-	echo -e "${LG}Select network protocol:${Y}"
-	read -p "==>" nwp
+	echo -e "${LG}         Select network protocol:${Y}"
+	read -p "         ==>" nwp
 	case $nwp in
 	[1]) folder_path=$TCP
-	echo -e "${LG} \nYou chose $folder_path.";;
+	echo -e "${LG} \n         You chose $folder_path.";;
 	[2]) folder_path=$UDP
-	echo -e "${LG} \nYou chose $folder_path.";;
+	echo -e "${LG} \n         You chose $folder_path.";;
 	[3-9,0])
-	echo -e " \nInvalid number. Please try again.";;
+	echo -e " \n         Invalid number. Please try again.";;
 	esac
 done
 }
-selectPath
 
-printNames(){
+select-path
+
+print-names(){
+print-header
 # Read the file paths into an array
 mapfile -t file_paths < <(find "$folder_path" -type f -iname "*.ovpn")
 
 # Find the maximum file name length
 max_length=0
+
 for ((i=0; i<${#file_paths[@]}; i++)); do
-  file_name=$(basename "${file_paths[$i]}")
-  if [ ${#file_name} -gt $max_length ]; then
-    max_length=${#file_name}
-  fi
+file_name=$(basename "${file_paths[$i]}")
+if [ ${#file_name} -gt $max_length ]; then
+max_length=${#file_name}
+fi
 done
 
 # Print the list of files inside an ASCII box
 box_width=$((max_length + 10))
+
 echo "            +----+$(printf "%*s" $box_width | tr ' ' '-')+"
 echo "            | #  |$(printf "%*s" $box_width | tr ' ' '-')|"
 echo "            +----+$(printf "%*s" $box_width | tr ' ' '-')+"
 for ((i=0; i<${#file_paths[@]}; i++)); do
-  file_name=$(basename "${file_paths[$i]}")
-  printf "            | %2d |%-${box_width}s|\n" $((i+1)) "$file_name"
+file_name=$(basename "${file_paths[$i]}")
+printf "            | %2d |%-${box_width}s|\n" $((i+1)) "$file_name"
 done
 echo "            +----+$(printf "%*s" $box_width | tr ' ' '-')+"
 
-echo "            (p to select a different protocol)                   "
+echo -e "\n         (p to select a different protocol)                   "
 }
 
-printNames
+print-names
 
-VPNConfig=""
-# Use a dynamic case statement to assign the VPNConfig variable
-while [[ $VPNConfig = "" ]]; do
-  echo -e "Enter the line number (or 'q' to quit): ${Y}"
-  read -p "==>" line_number
+exit-openvpn(){
 
-  if [ "$line_number" = "q" ]; then
-    break
-  fi
+echo -e "\n${R}         Closing VPNSel-ng."
 
-  # Check if the line number is valid
-  if (( line_number >= 1 && line_number <= ${#file_paths[@]} )); then
+if pgrep -f openvpn > /dev/null; then
+# Close the app
+pkill openvpn
+exit 0
+else
+exit 0
+fi
 
-    VPNConfig="${file_paths[$((line_number-1))]}"
-    YN=""
+}
 
-    while [[ $YN = "" ]]; do
+restart-openvpn(){
 
-		echo -e "${LG}Do you want to use: $VPNConfig? Y/N ${Y}"
-		read -p "==> " yn
-		case $yn in
-		 [Y,y])
-			 echo -e "${LG}Starting OpenVPN with $VPNConfig... \n"
-			 YN=1
-			 UseAuth=""
-			 while [[ $UseAuth = "" ]]; do
-			 echo -e "${LG}Want to use Auth-User-Pass? Y/N ${Y}"
-			 read -p "==>" auth
+echo -e "\n${R}         Restarting VPNSel-ng."
+if pgrep -f openvpn > /dev/null; then
+# Close the app
+pkill openvpn
+print-header
+select-path
+print-names
+file_number=""
+selected_config=""
+select-vpn
+select-auth
+start-vpn
+else
+print-header
+select-path
+print-names
+file_number=""
+selected_config=""
+select-vpn
+select-auth
+start-vpn
+fi
 
-				case $auth in
-				[Y,y])
-					sudo openvpn --config $VPNConfig --auth-user-pass pass.txt
-					#$UseAuth=1
-					break;;
-				[N,n])
-					sudo openvpn --config $VPNConfig
-					#$UseAuth=1
-					break;;
-				*)
-					echo -e "Invalid option. Please try again.";;
-				esac
-			 done;;
-		 [N,n])
-			 echo -e "${LG}Choose Another Config. \n"
-			 VPNConfig=""
-			 YN=1;;
-		esac
+}
 
-    done
-  else
-    if [ "$line_number" = "p" ]; then
-		folder_path=""
-		selectPath
-		printNames
-    else
-		echo -e "${LG}Invalid line number. Please try again."
-    fi
-  fi
+vpn-options(){
+
+echo -e "\n         OpenVPN connection established. What would you like to do?"
+echo -e "         1. Restart OpenVPN"
+echo -e "         2. Close the app ${Y}"
+read -p "         Enter your choice: " choice
+
+case $choice in
+  1)
+    # Restart OpenVPN
+    restart-openvpn
+    ;;
+  2)
+    # Close the app
+    exit-openvpn
+    ;;
+  *)
+    echo -e "\n${R}         Invalid choice. Closing the app."
+    exit-openvpn
+    ;;
+esac
+
+}
+
+start-vpn(){
+echo -e "\n         Starting VPN Connection..."
+$vpn_command
+vpn-options
+}
+
+select-vpn(){
+
+while [[ $selected_config = "" ]]; do
+
+echo -e "\n${LG}         To change network protocol use p."
+echo -e "\n${LG}         Choose which VPN configuration file to use (or type q to exit): ${Y}"
+read -p "         ==> " file_number
+
+#Exit tool
+if [[ $file_number = "q" ]]; then
+exit-openvpn
+fi
+
+#Select network protocol
+if [[ $file_number = "p" ]]; then
+print-header
+folder_path=""
+select-path
+print-names
+fi
+
+#Select config file number
+
+if [[ $file_number = "" ]]; then
+
+echo -e "\n${R}         Invalid option. Please enter a number, p to change protocol, or q to quit. ${Y}"
+
+else
+
+if (( $file_number >= 1 && $file_number <= ${#file_paths[@]})); then
+
+temp_config="${file_paths[$((file_number-1))]}"
+
+echo -e "\n${LG}         Do you want to use $temp_config? (y/n) ${Y}"
+read -p "         Enter your choice: " use_config
+
+if [[ $use_config = "y" ]]; then
+
+selected_config="${file_paths[$((file_number-1))]}"
+
+vpn_command="sudo openvpn --config $selected_config"
+
+elif [[ $use_config = "n" ]]; then
+
+
+file_number=""
+selected_config=""
+print-header
+print-names
+select-vpn
+
+else
+
+file_number=""
+selected_config=""
+print-header
+print-names
+select-vpn
+
+fi
+
+fi
+
+fi
+
 done
+
+}
+
+select-auth(){
+echo -e "\n${LG}         Do you want to use --Auth-User-Pass (pass.txt) as your credentials? (y/n)${Y}"
+read -p "         Enter your choice: " use_auth
+
+if [[ $use_auth = "y" ]]; then
+echo -e "${LG}         Using Authentication."
+vpn_command+=" --auth-user-pass pass.txt"
+
+elif [[ $use_auth = "n" ]]; then
+
+echo -e "${LG}         Not using Authentication."
+
+else
+
+echo -e "${R}         Invalid option. Please try again."
+select-auth
+fi
+}
+
+select-vpn
+select-auth
+start-vpn
