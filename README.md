@@ -30,16 +30,19 @@ Installation
 ------------
 
 Using WGET:
+```bash
 wget https://raw.githubusercontent.com/KaliforniaGator/VPNSel/main/install.sh
-
+```
 Using CURL:
+```bash
 curl -O https://raw.githubusercontent.com/KaliforniaGator/VPNSel/main/install.sh
-
+```
 Using Git:
+```bash
 git clone https://github.com/KaliforniaGator/VPNSel.git
 cd VPNSel
-git checkout c45cb0a9d8c35f5e0405299275ec8265844a74fb
-cp install.sh ~/  # or wherever they want to copy the file
+./vpnsel-ng
+```
 
 Updating
 --------
