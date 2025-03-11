@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Get the directory where the script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 # Make sure OpenVPN is installed
 check-for-openvpn(){
 if ! command -v openvpn &> /dev/null; then
@@ -28,9 +31,10 @@ fi
 
 check-for-openvpn
 
-# Set the folder path
-TCP="TCP/"
-UDP="UDP/"
+# Modify the TCP, UDP and pass.txt path definitions to use the script directory
+TCP="${SCRIPT_DIR}/TCP/"
+UDP="${SCRIPT_DIR}/UDP/"
+PASS_FILE="${SCRIPT_DIR}/pass.txt"
 folder_path=""
 file_path=""
 selected_config=""
@@ -272,7 +276,7 @@ read -p "            Enter your choice: " use_auth
 
 if [[ $use_auth = "y" ]]; then
 echo -e "${LG}            Using Authentication."
-vpn_command+=" --auth-user-pass pass.txt"
+vpn_command+=" --auth-user-pass ${PASS_FILE}"
 
 elif [[ $use_auth = "n" ]]; then
 
@@ -393,7 +397,7 @@ case $action in
 	select-editor
 	fi
 
-	sudo $selected_editor pass.txt
+	sudo $selected_editor "${PASS_FILE}"
 	select-action;;
 	5)
 	if [[ -n $select-editor="" ]]; then
