@@ -66,8 +66,8 @@ echo -e "${BGreen}    \ \   / /  _ \| \ | | / ___|  ___| |     | \ | |/ ___|\033
 echo -e "${BGreen}     \ \ / /| |_) |  \| | \___ \ / _ \ |_____|  \| | |  _ \033[0m"
 echo -e "${BGreen}      \ V / |  __/| |\  |  ___) |  __/ |_____| |\  | |_| |\033[0m"
 echo -e "${BGreen}       \_/  |_|   |_| \_| |____/ \___|_|     |_| \_|\____|\033[0m"
-echo -e "${BGreen}                   THE VPN TOOL YOU DIDNT KNOW YOU NEEDED\033[0m"
-echo ""
+echo -e "${BGreen}                    THE VPN TOOL YOU DIDNT KNOW YOU NEEDED\033[0m"
+echo " "
 }
 
 print-header
